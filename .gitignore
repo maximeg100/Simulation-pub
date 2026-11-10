@@ -1,0 +1,7 @@
+# Fichiers compilés
+pub
+client
+*.o
+
+# Dossier de logs
+logs/*.log
