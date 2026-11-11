@@ -36,6 +36,7 @@ void log_event(const char *source, const char *message){
 }
 
 void logger_close(void) {
+    // ferme le fichier log si il est pas NULL et qu'il est unlock
     pthread_mutex_lock(&log_mutex);
     if (log_file != NULL) {
         fclose(log_file);
