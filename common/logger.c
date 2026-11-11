@@ -45,25 +45,3 @@ void logger_close(void) {
     pthread_mutex_unlock(&log_mutex);
 }
 
-
-// === CODE TEMPORAIRE DE TEST ===
-int main(void) {
-    // 1. Initialiser le fichier de log
-    logger_init("test_logger.log");
-
-    // 2. Écrire des messages de test
-    log_event("SYSTEM", "Demarrage du test du logger");
-    
-    char buffer[128];
-    int id_table = 3;
-    snprintf(buffer, sizeof(buffer), "Le client Alice a rejoint la table %d", id_table);
-    log_event("TABLE", buffer);
-
-    log_event("BARMAN", "Preparation d'une biere terminee");
-
-    // 3. Fermer le fichier
-    logger_close();
-
-    printf("--> Test termine avec succes !\n");
-    return 0;
-}
