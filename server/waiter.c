@@ -72,7 +72,7 @@ void* thread_serveur(void *arg) {
                 }
             }
         }
-        if (tous_prets == false) {
+        if (tous_prets == false || cmd.nb_produits == 0) { //si les clients partent,a verifier
             const char *msg = RSP_WAITER "|Tout le monde n'est pas pret!\n";
             for (int i = 0; i < tbl->nb_clients; i++) {
                 if (tbl->clients[i] != NULL) {
@@ -86,6 +86,9 @@ void* thread_serveur(void *arg) {
             moi->etat = SERVEUR_DISPONIBLE;
             continue;
         }
+
+        tbl->etat = TABLE_ATTENTE_LIVRAISON;
+        pthread_mutex_unlock(&tbl->mutex);
 
         //le serveur transmet au barman la commande au barman
         moi->etat = SERVEUR_TRANSMISSION;
@@ -120,8 +123,9 @@ void* thread_serveur(void *arg) {
             const char *msg = RSP_DELIVER "| Votre Commande est servie !\n";
             if (tbl->clients[i] != NULL){
                 send(tbl->clients[i]->socket_fd, msg, strlen(msg), 0);
+                tbl->clients[i]->nb_consommations++;
             }
-            tbl->clients[i]->nb_consommations++;
+            
         }
         tbl->etat = TABLE_SERVIE;
         tbl->id_serveur_affecte = -1;
